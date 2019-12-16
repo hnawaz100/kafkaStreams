@@ -1,0 +1,7 @@
+--Table connector configuration script
+curl -X POST -H "Content-Type: application/json" --data '{"name": "northwind-orders-source", "config": {"connector.class":"io.confluent.connect.jdbc.JdbcSourceConnector", "tasks.max":"1", "connection.url":"jdbc:mysql://localhost/northwind?user=user&password=password", "mode":"timestamp", "table.whitelist" : "orders","timestamp.column.name":"entry_date", "topic.prefix":"northwind" }}' http://localhost:8083/connectors
+
+curl -X POST -H "Content-Type: application/json" --data '{"name": "northwind-od-source", "config": {"connector.class":"io.confluent.connect.jdbc.JdbcSourceConnector", "tasks.max":"1", "connection.url":"jdbc:mysql://localhost/northwind?user=user&password=password", "mode":"timestamp", "table.whitelist" : "order_details","timestamp.column.name":"entry_date", "topic.prefix":"northwind" }}' http://localhost:8083/
+
+--The view connector configuration script
+curl -X POST -H "Content-Type: application/json" --data '{"name": "northwind-vw-source", "config": {"connector.class":"io.confluent.connect.jdbc.JdbcSourceConnector", "tasks.max":"1", "connection.url":"jdbc:mysql://localhost/northwind?user=user&password=password", "mode":"timestamp", "table.whitelist" : "vw_orderdetail", "table.types":"VIEW","timestamp.column.name":"entry_date", "topic.prefix":"northwind" }}' http://localhost:8083/connectors
