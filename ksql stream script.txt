@@ -1,0 +1,18 @@
+create stream sales_target \
+with (VALUE_FORMAT='JSON') AS \
+ SELECT o.ShipCountry, o.OrderDate, od.OrderID, (UnitPrice * Quantity) as SalesAmount \
+ FROM nwod od \
+ left join orders_keyed o \
+  on od.OrderID = o.OrderID \
+   where (UnitPrice * Quantity) > 10000;
+
+
+create stream sales_Net with (VALUE_FORMAT='JSON') AS \
+ SELECT o.ShipCountry,  TIMESTAMPTOSTRING(o.OrderDate, 'yyyy-MM-dd HH:mm:ss.SSS') AS OrderDate, TIMESTAMPTOSTRING(o.OrderDate, 'yyyy-MM-dd') as mOrderDate, \
+ TIMESTAMPTOSTRING(o.OrderDate, 'yyyy') as OrderYear,   (UnitPrice * Quantity) as SalesAmount,  ((UnitPrice * Quantity) * discount ) as Discount, \
+ case When ((UnitPrice * Quantity) * discount ) > 2000 Then 'Need Inquiry' Else 'Other' END AS Discount_flag, \
+ (UnitPrice * Quantity) - ((UnitPrice * Quantity) * discount ) as NetSalesAmount \
+ FROM nwod od \
+ left join orders_keyed o \
+  on od.OrderID = o.OrderID \
+   where (UnitPrice * Quantity) > 10000;
