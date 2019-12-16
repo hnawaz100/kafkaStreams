@@ -1,0 +1,5 @@
+--ksql services start up
+/root/opt/kafka/bin/ksql-server-start  /root/opt/kafka/etc/ksql/ksql-server.properties
+
+--connect to ksql via command line
+/root/opt/kafka/bin/ksql http://localhost:8088
